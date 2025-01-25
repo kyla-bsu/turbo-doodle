@@ -98,6 +98,19 @@ void test_add2(void)
   TEST_ASSERT_TRUE(*((int *)lst_->head->prev->data) == 1);
 }
 
+void test_add_multiple(void)
+{
+  for (int i = 0; i < 10; i++) {
+    list_add(lst_, alloc_data(i));
+  }
+  TEST_ASSERT_TRUE(lst_->size == 10);
+
+  node_t *curr = lst_->head->next;
+  for (int i = 9; i >= 0; i--) {
+    TEST_ASSERT_TRUE(*((int *)curr->data) == i);
+    curr = curr->next;
+  }
+}
 
 void test_removeIndex0(void)
 {
@@ -173,6 +186,39 @@ void test_removeIndex4(void)
     }
 }
 
+void test_remove_middle(void)
+{
+  populate_list();
+  int *rval = (int *)list_remove_index(lst_, 2);
+  TEST_ASSERT_TRUE(lst_->size == 4);
+  TEST_ASSERT_TRUE(*rval == 2);
+  free(rval);
+
+  node_t *curr = lst_->head->next;
+  //List should be 4->3->1->0
+  int expected[] = {4, 3, 1, 0};
+  for (int i = 0; i < 4; i++) {
+    TEST_ASSERT_TRUE(*((int *)curr->data) == expected[i]);
+    curr = curr->next;
+  }
+}
+
+void test_remove_last(void)
+{
+  populate_list();
+  int *rval = (int *)list_remove_index(lst_, lst_->size - 1);
+  TEST_ASSERT_TRUE(lst_->size == 4);
+  TEST_ASSERT_TRUE(*rval == 0);
+  free(rval);
+
+  node_t *curr = lst_->head->next;
+  //List should be 4->3->2->1
+  int expected[] = {4, 3, 2, 1};
+  for (int i = 0; i < 4; i++) {
+    TEST_ASSERT_TRUE(*((int *)curr->data) == expected[i]);
+    curr = curr->next;
+  }
+}
 
 void test_invaidIndex(void)
 {
@@ -242,18 +288,31 @@ void test_notInList(void)
   free(data);
 }
 
+void test_clear_list(void)
+{
+  populate_list();
+  list_clear(lst_);
+  TEST_ASSERT_TRUE(lst_->size == 0);
+  TEST_ASSERT_TRUE(lst_->head->next == lst_->head);
+  TEST_ASSERT_TRUE(lst_->head->prev == lst_->head);
+}
+
 int main(void) {
   UNITY_BEGIN();
   RUN_TEST(test_create_destroy);
   RUN_TEST(test_add1);
   RUN_TEST(test_add2);
+  RUN_TEST(test_add_multiple);
   RUN_TEST(test_removeIndex0);
   RUN_TEST(test_removeIndex3);
   RUN_TEST(test_removeIndex4);
+  RUN_TEST(test_remove_middle);
+  RUN_TEST(test_remove_last);
   RUN_TEST(test_invaidIndex);
   RUN_TEST(test_removeAll);
   RUN_TEST(test_indexOf0);
   RUN_TEST(test_indexOf3);
   RUN_TEST(test_notInList);
+  RUN_TEST(test_clear_list);
   return UNITY_END();
 }
