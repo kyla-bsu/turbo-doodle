@@ -98,7 +98,7 @@ void test_add2(void)
   TEST_ASSERT_TRUE(*((int *)lst_->head->prev->data) == 1);
 }
 
-void test_add_multiple(void)
+void test_addMultiple(void)
 {
   for (int i = 0; i < 10; i++) {
     list_add(lst_, alloc_data(i));
@@ -186,7 +186,7 @@ void test_removeIndex4(void)
     }
 }
 
-void test_remove_middle(void)
+void test_removeMiddle(void)
 {
   populate_list();
   int *rval = (int *)list_remove_index(lst_, 2);
@@ -203,7 +203,7 @@ void test_remove_middle(void)
   }
 }
 
-void test_remove_last(void)
+void test_removeLast(void)
 {
   populate_list();
   int *rval = (int *)list_remove_index(lst_, lst_->size - 1);
@@ -288,13 +288,18 @@ void test_notInList(void)
   free(data);
 }
 
-void test_clear_list(void)
+void test_listFind(void)
 {
-  populate_list();
-  list_clear(lst_);
-  TEST_ASSERT_TRUE(lst_->size == 0);
-  TEST_ASSERT_TRUE(lst_->head->next == lst_->head);
-  TEST_ASSERT_TRUE(lst_->head->prev == lst_->head);
+  list_t *lst = list_init(destroy_data, compare_to);
+  int *data1 = alloc_data(1);
+  int *data2 = alloc_data(2);
+  list_add(lst, data1);
+  list_add(lst, data2);
+  size_t idx = list_indexof(lst, data1);
+  TEST_ASSERT_TRUE(idx == 1);
+  idx = list_indexof(lst, data2);
+  TEST_ASSERT_TRUE(idx == 0);
+  list_destroy(&lst);
 }
 
 int main(void) {
@@ -302,17 +307,17 @@ int main(void) {
   RUN_TEST(test_create_destroy);
   RUN_TEST(test_add1);
   RUN_TEST(test_add2);
-  RUN_TEST(test_add_multiple);
+  RUN_TEST(test_addMultiple);
   RUN_TEST(test_removeIndex0);
   RUN_TEST(test_removeIndex3);
   RUN_TEST(test_removeIndex4);
-  RUN_TEST(test_remove_middle);
-  RUN_TEST(test_remove_last);
+  RUN_TEST(test_removeMiddle);
+  RUN_TEST(test_removeLast);
   RUN_TEST(test_invaidIndex);
   RUN_TEST(test_removeAll);
   RUN_TEST(test_indexOf0);
   RUN_TEST(test_indexOf3);
   RUN_TEST(test_notInList);
-  RUN_TEST(test_clear_list);
+  RUN_TEST(test_listFind);
   return UNITY_END();
 }
