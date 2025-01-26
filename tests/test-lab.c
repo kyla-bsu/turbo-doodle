@@ -117,8 +117,15 @@ void test_removeIndex0(void)
   populate_list();
   int *rval = (int *)list_remove_index(lst_, 0);
   TEST_ASSERT_TRUE(lst_->size == 4);
-  TEST_ASSERT_TRUE(*rval == 4);
-  free(rval);
+  if (rval != NULL) 
+  {
+    TEST_ASSERT_TRUE(*rval == 4);
+    free(rval);
+  } else
+  {
+    printf("Error: rval is a null pointer\n");
+    TEST_FAIL();
+  }
 
   node_t *curr = lst_->head->next;
   //List should be 3->2->1->0

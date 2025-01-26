@@ -24,19 +24,19 @@ void list_destroy(list_t **list)
     if (list == NULL || *list == NULL)
         return;
 
-        node_t *current = (*list)->head;
-        node_t *next;
+    node_t *current = (*list)->head;
+    node_t *next;
 
-        for (size_t i = 0; i < (*list)->size; i++)
-        {
-            next = current->next;
-            (*list)->destroy_data(current->data);
-            free(current);
-            current = next;
-        }
+    for (size_t i = 0; i < (*list)->size; i++)
+    {
+        next = current->next;
+        (*list)->destroy_data(current->data);
+        free(current);
+        current = next;
+    }
 
-        free(*list);
-        *list = NULL;
+    free(*list);
+    *list = NULL;
 }
 
 list_t *list_add(list_t *list, void *data)
@@ -54,20 +54,7 @@ list_t *list_add(list_t *list, void *data)
 
     new_node->data = data;
 
-    if (list->head == NULL)
-    {
-        // Initialize the sentinel node
-        list->head = (node_t *)malloc(sizeof(node_t));
-        if (list->head == NULL)
-        {
-            free(new_node);
-            return NULL;
-        }
-        list->head->next = list->head;
-        list->head->prev = list->head;
-    }
-
-    // Insert new_node before the sentinel node
+    // Insert new_node before the sentinel node that was initialized in list_init
     new_node->next = list->head;
     new_node->prev = list->head->prev;
     list->head->prev->next = new_node;
@@ -105,7 +92,7 @@ void *list_remove_index(list_t *list, size_t index) {
 
         return data;
     }
-    
+
     int list_indexof(list_t *list, void *data)
     {
         if (list == NULL || data == NULL)
