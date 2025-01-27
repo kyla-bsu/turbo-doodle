@@ -20,23 +20,23 @@ list_t *list_init(void (*destroy_data)(void *), int (*compare_to)(const void *, 
 }
 
 
-void list_destroy(list_t **list)
-{
-    if (list == NULL || *list == NULL)
+void list_destroy(list_t **list) {
+    if (list == NULL || *list == NULL) {
         return;
+    }
 
-    node_t *current = (*list)->head;
+    node_t *current = (*list)->head->next; // Start from the first actual node
     node_t *next;
 
-    for (size_t i = 0; i < (*list)->size; i++)
-    {
+    while (current != (*list)->head) { // Loop until we reach the sentinel node
         next = current->next;
-        (*list)->destroy_data(current->data);
-        free(current);
+        (*list)->destroy_data(current->data); // Free the data using the provided function
+        free(current); // Free the node
         current = next;
     }
 
-    free(*list);
+    free((*list)->head); // Free the sentinel node
+    free(*list); // Free the list structure
     *list = NULL;
 }
 

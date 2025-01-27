@@ -77,6 +77,8 @@ void test_add1(void)
   //Check to make sure our data actually made it into the node
   TEST_ASSERT_TRUE(*((int *)lst_->head->next->data) == 1);
   TEST_ASSERT_TRUE(*((int *)lst_->head->prev->data) == 1);
+
+  list_destroy(&lst_); //fixing memory leak
 }
 
 void test_add2(void)
@@ -96,6 +98,8 @@ void test_add2(void)
   //Check to make sure our next and prev have the correct data
   TEST_ASSERT_TRUE(*((int *)lst_->head->next->data) == 2);
   TEST_ASSERT_TRUE(*((int *)lst_->head->prev->data) == 1);
+
+  list_destroy(&lst_); //fixing memory leak
 }
 
 void test_addMultiple(void)
@@ -110,6 +114,9 @@ void test_addMultiple(void)
     TEST_ASSERT_TRUE(*((int *)curr->data) == i);
     curr = curr->next;
   }
+
+  list_destroy(&lst_); //fixing memory leak
+
 }
 
 void test_removeIndex0(void)
@@ -140,6 +147,8 @@ void test_removeIndex0(void)
       TEST_ASSERT_TRUE(*((int *)curr->data) == i);
       curr = curr->prev;
     }
+
+    list_destroy(&lst_); //fixing memory leak
 }
 
 void test_removeIndex3(void)
@@ -163,10 +172,13 @@ void test_removeIndex3(void)
   //Set the curr back one node so we can check prev links
   curr = curr->prev;
   for (int i = 1; i <= 3; i++)
-    {
+  {
       TEST_ASSERT_TRUE(*((int *)curr->data) == i + 1);
       curr = curr->prev;
-    }
+  }
+
+  list_destroy(&lst_); //fixing memory leak
+
 }
 
 
@@ -181,16 +193,19 @@ void test_removeIndex4(void)
   node_t *curr = lst_->head->next;
   //List should be 4->3->2->1
   for (int i = 3; i >= 0; i--)
-    {
+  {
       TEST_ASSERT_TRUE(*((int *)curr->data) == i + 1);
       curr = curr->next;
-    }
+  }
   curr = lst_->head->prev;
   for (int i = 0; i <= 3; i++)
-    {
+  {
       TEST_ASSERT_TRUE(*((int *)curr->data) == i + 1);
       curr = curr->prev;
-    }
+  }
+
+  list_destroy(&lst_); //fixing memory leak
+
 }
 
 void test_removeMiddle(void)
@@ -208,6 +223,9 @@ void test_removeMiddle(void)
     TEST_ASSERT_TRUE(*((int *)curr->data) == expected[i]);
     curr = curr->next;
   }
+
+  list_destroy(&lst_); //fixing memory leak
+
 }
 
 void test_removeLast(void)
@@ -225,6 +243,9 @@ void test_removeLast(void)
     TEST_ASSERT_TRUE(*((int *)curr->data) == expected[i]);
     curr = curr->next;
   }
+
+  list_destroy(&lst_); //fixing memory leak
+
 }
 
 void test_invaidIndex(void)
@@ -237,16 +258,19 @@ void test_invaidIndex(void)
   node_t *curr = lst_->head->next;
   //List should be 4->3->2->1->0
   for (int i = 4; i >= 0; i--)
-    {
+  {
       TEST_ASSERT_TRUE(*((int *)curr->data) ==  i);
       curr = curr->next;
-    }
+  }
 
   for (int i = 0; i >= 4; i++)
-    {
+  {
       TEST_ASSERT_TRUE(*((int *)curr->data) == i);
       curr = curr->prev;
-    }
+  }
+
+    list_destroy(&lst_); //fixing memory leak
+
 }
 
 void test_removeAll(void)
@@ -270,6 +294,9 @@ void test_removeAll(void)
   TEST_ASSERT_FALSE(lst_->head->prev == NULL);
   TEST_ASSERT_TRUE(lst_->head->next == lst_->head->prev);
   TEST_ASSERT_TRUE(lst_->size == 0);
+
+  list_destroy(&lst_); //fixing memory leak
+
 }
 
 void test_indexOf0(void)
@@ -279,6 +306,9 @@ void test_indexOf0(void)
   void *data = lst_->head->next->data;
   size_t idx = list_indexof(lst_, data);
   TEST_ASSERT_TRUE(idx == 0);
+
+  list_destroy(&lst_); //fixing memory leak
+
 }
 
 void test_indexOf3(void)
@@ -289,6 +319,9 @@ void test_indexOf3(void)
   size_t idx = list_indexof(lst_, data);
   TEST_ASSERT_TRUE(idx == 3);
   free(data);
+
+  list_destroy(&lst_); //fixing memory leak
+
 }
 
 void test_notInList(void)
@@ -298,6 +331,9 @@ void test_notInList(void)
   int idx = list_indexof(lst_, data);
   TEST_ASSERT_EQUAL_INT64(-1, idx);
   free(data);
+
+  list_destroy(&lst_); //fixing memory leak
+
 }
 
 void test_listFind(void)
@@ -311,7 +347,9 @@ void test_listFind(void)
   TEST_ASSERT_TRUE(idx == 1);
   idx = list_indexof(lst, data2);
   TEST_ASSERT_TRUE(idx == 0);
+
   list_destroy(&lst);
+  
 }
 
 int main(void) {
