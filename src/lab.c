@@ -92,25 +92,25 @@ void *list_remove_index(list_t *list, size_t index) {
     return data;
 }
 
-    int list_indexof(list_t *list, void *data)
+int list_indexof(list_t *list, void *data)
+{
+    if (list == NULL || data == NULL)
     {
-        if (list == NULL || data == NULL)
-        {
-            return -1;
-        }
-
-        node_t *current = list->head;
-        int index = 0;
-
-        do
-        {
-            if (list->compare_to(current->data, data) == 0)
-            {
-                return index;
-            }
-            current = current->next;
-            index++;
-        } while (current != list->head);
-
         return -1;
     }
+
+    node_t *current = list->head->next;
+    int index = 0;
+
+    do
+    {
+        if (list->compare_to(current->data, data) == 0)
+        {
+            return index;
+        }
+        current = current->next;
+        index++;
+    } while (current != list->head);
+
+    return -1;
+}
