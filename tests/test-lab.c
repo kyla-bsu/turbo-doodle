@@ -256,8 +256,13 @@ void test_removeAll(void)
   for (int i = 4; i >= 0; i--)
     {
       int *rval = (int *)list_remove_index(lst_, 0);
-      TEST_ASSERT_TRUE(*rval == i);
-      free(rval);
+      if (rval != NULL) {
+        TEST_ASSERT_TRUE(*rval == i);
+        free(rval);
+      } else {
+        printf("Error: rval is a null pointer\n");
+        TEST_FAIL();
+      }
     }
 
   //Make sure we back to default
